@@ -8,7 +8,7 @@ For comprehensive details about the project's API endpoints, requests, and respo
 
 ## Postman Collection
 
-The project's API can be conveniently tested using the provided Postman collection. You can access the collection by following this [Postman Collection Link](https://lively-trinity-194672.postman.co/workspace/My-Workspace~03620632-d012-42ff-8026-969a2276b5b9/collection/13222363-b8448f72-fa15-4a11-87e4-a0210e271854?action=share&creator=13222363). Import this collection into your Postman workspace to expedite testing and development.
+The project's API can be conveniently tested using the provided Postman collection. You can access the collection by following this [Postman Collection Link](https://lively-trinity-194672.postman.co/workspace/My-Workspace~03620632-d012-42ff-8026-969a2276b5b9/collection/13222363-6ea69b37-0c8f-4b9c-ae52-8c7977e3ee59?action=share&creator=13222363&active-environment=13222363-b32e555c-f9d4-4424-a21a-40b808e926b6). Import this collection into your Postman workspace to expedite testing and development.
 
 ## Backend Database (MongoDB Cluster)
 
