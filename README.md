@@ -13,6 +13,8 @@ The project's API can be conveniently tested using the provided Postman collecti
 ## Backend Database (MongoDB Cluster)
 
 The project employs a MongoDB cluster as its backend database. Here's the connection link to the MongoDB cluster:
+
+
 ```plaintext
 mongodb+srv://Nidhi:p4bIruTE6ww0jYnr@cluster0.1mkh9ux.mongodb.net
 ```
@@ -20,10 +22,12 @@ mongodb+srv://Nidhi:p4bIruTE6ww0jYnr@cluster0.1mkh9ux.mongodb.net
 
 To visualize the data stored in the database, you can utilize MongoDB Compass. Paste the provided connection link in MongoDB Compass to connect and inspect the data.
 
-```
 If you have any inquiries or require further assistance pertaining to the project, feel free to reach out.
+
 ## To install dependencies of backend
+
 To install dependencies, execute the following command:
+
 ```plaintext
 npm install
 ```
