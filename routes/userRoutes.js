@@ -8,5 +8,6 @@ const { adminRegister, login } = require("../validation/validation");
 router.post("/register", validate(adminRegister), userController.registerAdmin);
 router.post("/login", validate(login), userController.login);
 
-router.get("/getUser", auth, userController.userList);
+router.get("/getUser", auth, userController.users);
+router.post("/createUser", auth, userController.createUser);
 module.exports = router;
