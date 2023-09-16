@@ -1,9 +1,9 @@
-const { User } = require("../models/userModel");
 const bcrypt = require("bcrypt");
 var jwt = require("jsonwebtoken");
 const { generateUnique } = require("../helper/passwordGenerator");
 const { sendMailFunction } = require("../helper/email");
 const checkAdmin = require("../middleware/adminAccess");
+const { User } = require("../models/userModel");
 const register = async (body) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -127,17 +127,13 @@ const passwordChange = async (body) => {
 const userUpdate = async (user, body) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const findUser = await User.findOne({
-        email: user.email,
-      });
-
-      const updateUser = await User.updateOne(
-        { _id: findUser._id },
+      await User.updateOne(
+        { _id: user.id },
         {
           ...body,
         }
       );
-      resolve(updateUser);
+      resolve(user);
     } catch (error) {
       reject(error);
     }

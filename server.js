@@ -1,6 +1,6 @@
 const express =require( "express");
 const dotenv =require( "dotenv");
-const route = require("./routes/index");
+const route = require("./src/routes/index");
 const mongoose = require("mongoose");
 const bodyparser = require("body-parser");
 ;

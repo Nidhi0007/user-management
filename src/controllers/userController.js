@@ -11,7 +11,7 @@ const {
 } = require("../service/userService");
 const { adminRegister } = require("../validation/validation");
 
-const registerAdmin = async (req, res) => {
+const registerAdminController = async (req, res) => {
   try {
     let obj = {};
     upload(req, res, async (err) => {
@@ -36,7 +36,7 @@ const registerAdmin = async (req, res) => {
   }
 };
 
-const login = async (req, res) => {
+const loginController = async (req, res) => {
   try {
     const logged = await loginUser(req.body);
     return res.send({
@@ -48,7 +48,7 @@ const login = async (req, res) => {
   }
 };
 
-const users = async (req, res) => {
+const userListController = async (req, res) => {
   try {
     const users = await userList();
     return res.send(users);
@@ -56,7 +56,7 @@ const users = async (req, res) => {
     return res.status(500).json(error.message);
   }
 };
-const createUser = async (req, res) => {
+const createUserController = async (req, res) => {
   try {
     const users = await createUserFunction(req.user, req.body);
     return res.send(users);
@@ -64,7 +64,7 @@ const createUser = async (req, res) => {
     return res.status(500).json(error.message);
   }
 };
-const changePassword = async (req, res) => {
+const changePasswordController = async (req, res) => {
   try {
     const users = await passwordChange(req.body);
     return res.send(users);
@@ -73,16 +73,33 @@ const changePassword = async (req, res) => {
   }
 };
 
-const updateUser = async (req, res) => {
+const updateUserController = async (req, res) => {
   try {
-    const users = await userUpdate(req.user, req.body);
-    return res.send(users);
+    // const users = await userUpdate(req.user, req.body);
+    // return res.send(users);
+    let obj = {};
+    upload(req, res, async (err) => {
+      obj = {
+        profilePicture: res.req.file
+          ? `http://localhost:8000/${res.req.file.path}`
+          : "",
+        ...res.req.body,
+      };
+      const { error } = userUpdateValidation.validate(obj);
+      if (error) {
+        return res.status(500).json(error.details[0].message);
+      }
+      await userUpdate(req.user, obj);
+      return res.send({
+        message: `User successfully updated`,
+      });
+    });
   } catch (error) {
     return res.status(500).json(error.message);
   }
 };
 
-const userDisabled = async (req, res) => {
+const disableUserController = async (req, res) => {
   try {
     const users = await disableUser(req.user, req.params.id);
     return res.send(users);
@@ -91,7 +108,7 @@ const userDisabled = async (req, res) => {
   }
 };
 
-const userDeleted = async (req, res) => {
+const deleteUserController = async (req, res) => {
   try {
     const users = await deleteUser(req.user, req.params.id);
     return res.send(users);
@@ -100,12 +117,12 @@ const userDeleted = async (req, res) => {
   }
 };
 module.exports = {
-  registerAdmin,
-  login,
-  users,
-  createUser,
-  changePassword,
-  updateUser,
-  userDisabled,
-  userDeleted,
+  registerAdminController,
+  loginController,
+  userListController,
+  createUserController,
+  changePasswordController,
+  updateUserController,
+  disableUserController,
+  deleteUserController,
 };
