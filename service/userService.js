@@ -20,6 +20,7 @@ const register = async (body) => {
 
       const user = new User(data);
       await user.save();
+
       resolve(user);
     } catch (error) {
       reject(error);
@@ -31,8 +32,11 @@ const loginUser = async (body) => {
   return new Promise(async (resolve, reject) => {
     try {
       const findUser = await User.findOne({ email: body.email });
-      if (!findUser && !findUser.enabled) {
-        throw new Error("User has been disabled/deleted");
+      if (!findUser) {
+        throw new Error("User does not exist");
+      }
+      if (!findUser.enabled) {
+        throw new Error("User is disabled");
       }
 
       const check = await findUser.comparePassword(body.password);
@@ -60,7 +64,8 @@ const userList = async () => {
     try {
       const getUser = await User.find({
         isAdmin: false,
-      });
+        enabled: true,
+      }).select("-password");
       resolve(getUser);
     } catch (error) {
       reject(error);
@@ -87,7 +92,7 @@ const createUserFunction = async (userdata, body) => {
         lastName: body.lastName,
         password: body.password,
       });
-      resolve(user);
+      resolve("User successfully created");
     } catch (error) {
       reject(error);
     }
@@ -101,17 +106,18 @@ const passwordChange = async (body) => {
         email: body.email,
       });
       const check = await findUser.comparePassword(body.oldPassword);
-
       if (!check) {
         throw new Error("Old password is incorrect");
       }
-      const updateUser = await User.updateOne(
+      const saltRounds = await bcrypt.genSalt(10);
+      const hash = await bcrypt.hash(body.newPassword, saltRounds);
+      await User.updateOne(
         { _id: findUser._id },
         {
-          password: body.newPassword,
+          password: hash,
         }
       );
-      resolve(updateUser);
+      resolve("Password is successfully changed");
     } catch (error) {
       reject(error);
     }
@@ -142,12 +148,9 @@ const disableUser = async (user, id) => {
   return new Promise(async (resolve, reject) => {
     try {
       await checkAdmin(user);
-      await User.findOneAndUpdate(
-        { _id: id },
-        {
-          enabled: false,
-        }
-      );
+      await User.findByIdAndUpdate(id, {
+        enabled: false,
+      });
       resolve("User successfully disabled");
     } catch (error) {
       reject(error);
@@ -159,7 +162,7 @@ const deleteUser = async (user, id) => {
   return new Promise(async (resolve, reject) => {
     try {
       await checkAdmin(user);
-      await User.deleteOne(id);
+      await User.deleteOne({ id });
       resolve("User successfully deleted");
     } catch (error) {
       reject(error);

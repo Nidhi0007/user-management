@@ -16,10 +16,12 @@ const registerAdmin = async (req, res) => {
     let obj = {};
     upload(req, res, async (err) => {
       obj = {
-        profilePicture: `http://localhost:8000/${res.req.file.path}`,
+        profilePicture: res.req.file
+          ? `http://localhost:8000/${res.req.file.path}`
+          : "",
         ...res.req.body,
       };
-      const { error, value } = adminRegister.validate(obj);
+      const { error } = adminRegister.validate(obj);
       if (error) {
         return res.status(500).json(error.details[0].message);
       }
@@ -82,7 +84,7 @@ const updateUser = async (req, res) => {
 
 const userDisabled = async (req, res) => {
   try {
-    const users = await disableUser(req.user, req.param.id);
+    const users = await disableUser(req.user, req.params.id);
     return res.send(users);
   } catch (error) {
     return res.status(500).json(error.message);
@@ -91,7 +93,7 @@ const userDisabled = async (req, res) => {
 
 const userDeleted = async (req, res) => {
   try {
-    const users = await deleteUser(req.user, req.param.id);
+    const users = await deleteUser(req.user, req.params.id);
     return res.send(users);
   } catch (error) {
     return res.status(500).json(error.message);

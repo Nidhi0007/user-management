@@ -4,7 +4,7 @@ const adminRegister = Joi.object().keys({
   firstName: Joi.string().required(),
   lastName: Joi.string().required(),
   email: Joi.string().email().required(),
-  profilePicture: Joi.string(),
+  profilePicture: Joi.string().allow(null,''),
   residentialAddress: Joi.string(),
   workAddress: Joi.string(),
   password: Joi.string().min(7).required(),
