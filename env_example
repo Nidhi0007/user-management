@@ -1,0 +1,6 @@
+PORT=8000
+URL="mongodb+srv://Nidhi:p4bIruTE6ww0jYnr@cluster0.1mkh9ux.mongodb.net/"
+CLIENT_ID=523820803234-v18flr9vc757srvf86un9r6ooqqal2o7.apps.googleusercontent.com
+CLIENT_SECRET=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
+REFRESHTOKEN=1//04LQhFzMZtoheCgYIARAAGAQSNwF-L9IrGdeo4fbtn7c-qvOH7x9sdhaZCyQDuqPARjVwSm7Q_5Wyp4JL73PewXG9zIaenC0nIoM
+MAILER_EMAIL_ID=bhatnidhis999@gmail.com
