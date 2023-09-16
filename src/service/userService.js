@@ -6,6 +6,7 @@ const checkAdmin = require("../middleware/adminAccess");
 const { User } = require("../models/userModel");
 const { upload } = require("./multerService");
 
+// to upload profile image
 const getFormData = (req, res) => {
   return new Promise((resolve, reject) => {
     upload(req, res, (err) => {
@@ -18,6 +19,7 @@ const getFormData = (req, res) => {
   });
 };
 
+// admin register function
 const register = async (body) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -42,6 +44,7 @@ const register = async (body) => {
   });
 };
 
+// login function for user and admin
 const loginUser = async (body) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -73,6 +76,8 @@ const loginUser = async (body) => {
     }
   });
 };
+
+//  to get list of users
 const userList = async (user) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -88,6 +93,7 @@ const userList = async (user) => {
   });
 };
 
+// to create user
 const createUserFunction = async (userdata, body) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -114,6 +120,7 @@ const createUserFunction = async (userdata, body) => {
   });
 };
 
+// change password function
 const passwordChange = async (body) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -139,6 +146,7 @@ const passwordChange = async (body) => {
   });
 };
 
+// update user function
 const userUpdate = async (user, body) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -146,13 +154,10 @@ const userUpdate = async (user, body) => {
       if (!userExists.length) {
         throw new Error("User not found");
       }
-      console.log(body)
-      await User.findByIdAndUpdate(
-         user.id,
-        {
-          ...body,
-        }
-      );
+      console.log(body);
+      await User.findByIdAndUpdate(user.id, {
+        ...body,
+      });
       resolve(user);
     } catch (error) {
       reject(error);
@@ -160,6 +165,7 @@ const userUpdate = async (user, body) => {
   });
 };
 
+// disable user
 const disableUser = async (user, id) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -178,6 +184,7 @@ const disableUser = async (user, id) => {
   });
 };
 
+// delete user
 const deleteUser = async (user, id) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -189,13 +196,14 @@ const deleteUser = async (user, id) => {
       if (!userExists.length) {
         throw new Error("User not found");
       }
-      await User.deleteOne({ id });
+      await User.remove({ _id: id });
       resolve("User successfully deleted");
     } catch (error) {
       reject(error);
     }
   });
 };
+
 module.exports = {
   getFormData,
   register,

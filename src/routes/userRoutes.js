@@ -11,7 +11,7 @@ const {
 
 router.post("/register", userController.registerAdminController);
 router.post("/login", validate(loginValidation), userController.loginController);
-router.get("/getUser", auth, userController.userListController);
+router.get("/getUsers", auth, userController.userListController);
 router.post("/createUser", auth,validate(createUserValidation), userController.createUserController);
 router.post(
   "/changePassword",

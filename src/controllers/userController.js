@@ -14,13 +14,14 @@ const {
   userUpdateValidation,
 } = require("../validation/validation");
 
+// controller function to register admin
 const registerAdminController = async (req, res) => {
   try {
     let obj = {};
     let data = await getFormData(req, res);
     obj = {
       profilePicture: data.file
-        ? `http://localhost:8000/${data.file.path}`
+        ? `${process.env.BASE_URL}/${data.file.path}`
         : "",
       ...data.body,
     };
@@ -38,6 +39,7 @@ const registerAdminController = async (req, res) => {
   }
 };
 
+// controller function to login user and admin
 const loginController = async (req, res) => {
   try {
     const logged = await loginUser(req.body);
@@ -50,6 +52,7 @@ const loginController = async (req, res) => {
   }
 };
 
+// to get list of users which are not admin
 const userListController = async (req, res) => {
   try {
     const users = await userList(req.user);
@@ -58,6 +61,8 @@ const userListController = async (req, res) => {
     return res.status(500).json(error.message);
   }
 };
+
+// create user by admin
 const createUserController = async (req, res) => {
   try {
     const users = await createUserFunction(req.user, req.body);
@@ -66,6 +71,8 @@ const createUserController = async (req, res) => {
     return res.status(500).json(error.message);
   }
 };
+
+// to change password by user and admin
 const changePasswordController = async (req, res) => {
   try {
     const users = await passwordChange(req.body);
@@ -75,11 +82,15 @@ const changePasswordController = async (req, res) => {
   }
 };
 
+// update user details
 const updateUserController = async (req, res) => {
   try {
     let obj = {};
     let data = await getFormData(req, res);
     obj = {
+      profilePicture: data.file
+        ? `${process.env.BASE_URL}/${data.file.path}`
+        : "",
       ...data.body,
     };
     const { error } = userUpdateValidation.validate(obj);
@@ -95,6 +106,7 @@ const updateUserController = async (req, res) => {
   }
 };
 
+// disable user by admin
 const disableUserController = async (req, res) => {
   try {
     const users = await disableUser(req.user, req.params.id);
@@ -104,6 +116,7 @@ const disableUserController = async (req, res) => {
   }
 };
 
+// delete user by admin
 const deleteUserController = async (req, res) => {
   try {
     const users = await deleteUser(req.user, req.params.id);
@@ -112,6 +125,7 @@ const deleteUserController = async (req, res) => {
     return res.status(500).json(error.message);
   }
 };
+
 module.exports = {
   registerAdminController,
   loginController,
