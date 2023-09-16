@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
-// const postController = require('../controllers/postController');
-// const followController = require('../controllers/followController');
-// router.post("/addPost", postController.addPost);
-// router.get("/getPosts", postController.getPosts);
-// router.post("/followUser", followController.followUser);
+const userController = require("../controllers/userController");
+const auth = require("../middleware/auth");
+const validate = require("../middleware/validate");
+const { adminRegister, login } = require("../validation/validation");
+
+router.post("/register", validate(adminRegister), userController.registerAdmin);
+router.post("/login", validate(login), userController.login);
 module.exports = router;

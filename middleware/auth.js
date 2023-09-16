@@ -1,4 +1,3 @@
-import { NextFunction, Response, Request } from "express";
 var jwt = require("jsonwebtoken");
 
 // auth middleware for protected apis
