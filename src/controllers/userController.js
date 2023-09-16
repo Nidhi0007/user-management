@@ -32,7 +32,6 @@ const registerAdminController = async (req, res) => {
     const registerUser = await register(obj);
     return res.send({
       message: `User successfully created`,
-      data: registerUser,
     });
   } catch (error) {
     return res.status(500).json(error.message);
@@ -65,8 +64,10 @@ const userListController = async (req, res) => {
 // create user by admin
 const createUserController = async (req, res) => {
   try {
-    const users = await createUserFunction(req.user, req.body);
-    return res.send(users);
+    const userCreated = await createUserFunction(req.user, req.body);
+    return res.send({
+      message: userCreated,
+    });
   } catch (error) {
     return res.status(500).json(error.message);
   }
@@ -75,8 +76,8 @@ const createUserController = async (req, res) => {
 // to change password by user and admin
 const changePasswordController = async (req, res) => {
   try {
-    const users = await passwordChange(req.body);
-    return res.send(users);
+    const passwordChanged = await passwordChange(req.body);
+    return res.send({ message: passwordChanged });
   } catch (error) {
     return res.status(500).json(error.message);
   }
@@ -109,8 +110,10 @@ const updateUserController = async (req, res) => {
 // disable user by admin
 const disableUserController = async (req, res) => {
   try {
-    const users = await disableUser(req.user, req.params.id);
-    return res.send(users);
+    const disabledUser = await disableUser(req.user, req.params.id);
+    return res.send({
+      message: disabledUser,
+    });
   } catch (error) {
     return res.status(500).json(error.message);
   }
@@ -119,8 +122,10 @@ const disableUserController = async (req, res) => {
 // delete user by admin
 const deleteUserController = async (req, res) => {
   try {
-    const users = await deleteUser(req.user, req.params.id);
-    return res.send(users);
+    const deletedUser = await deleteUser(req.user, req.params.id);
+    return res.send({
+      message: deletedUser,
+    });
   } catch (error) {
     return res.status(500).json(error.message);
   }

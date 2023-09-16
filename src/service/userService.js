@@ -36,7 +36,6 @@ const register = async (body) => {
 
       const user = new User(data);
       await user.save();
-      delete user.password;
       resolve(user);
     } catch (error) {
       reject(error);
