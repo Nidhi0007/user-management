@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
+var jwt = require("jsonwebtoken");
 const register = async (body) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -13,7 +14,6 @@ const register = async (body) => {
       if (findUser) {
         throw new Error("Email address is already registered");
       }
-      data.password = bcrypt.hashSync(body.password, 10);
 
       const user = new User(data);
       await user.save();
@@ -24,11 +24,10 @@ const register = async (body) => {
   });
 };
 
-const login = async (body) => {
+const loginUser = async (body) => {
   const findUser = await User.findOne({ email: body.email });
-  if (!findUser || !findUser.comparePassword(body.password)) {
-    throw new Error("Invalid email or password.");
-  }
+  let check=await findUser.comparePassword(body.password)
+
   let token = jwt.sign(
     {
       username: findUser.username,
@@ -38,12 +37,12 @@ const login = async (body) => {
     },
     process.env.SECRET
   );
-  return res.json({ token: token });
+  return token;
 };
 const userList = async () => {
   const getUser = await User.find({
     isAdmin: false,
   });
-  console.log("getUser", getUser);
+  return getUser;
 };
-module.exports = { register, login, userList };
+module.exports = { register, loginUser, userList };
