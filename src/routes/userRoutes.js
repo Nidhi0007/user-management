@@ -6,7 +6,6 @@ const validate = require("../middleware/validate");
 const {
   loginValidation,
   changePasswordValidation,
-  userUpdateValidation,
   createUserValidation
 } = require("../validation/validation");
 
@@ -22,7 +21,6 @@ router.post(
 router.put(
   "/userUpdate",
   auth,
-  validate(userUpdateValidation),
   userController.updateUserController
 );
 router.put("/disableUser/:id", auth, userController.disableUserController);

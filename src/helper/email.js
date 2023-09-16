@@ -32,7 +32,7 @@ const sendMailFunction = async (mail) => {
       });
   
       const html = fs.readFileSync(
-        path.join(__dirname, `../view/emailTemplate.hbs`),
+        path.join(__dirname, `../../view/emailTemplate.hbs`),
         "utf8"
       );
   

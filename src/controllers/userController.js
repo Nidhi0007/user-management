@@ -1,4 +1,3 @@
-const { upload } = require("../service/multerService");
 const {
   register,
   loginUser,
@@ -8,28 +7,31 @@ const {
   userUpdate,
   disableUser,
   deleteUser,
+  getFormData,
 } = require("../service/userService");
-const { adminRegister } = require("../validation/validation");
+const {
+  adminRegisterValidation,
+  userUpdateValidation,
+} = require("../validation/validation");
 
 const registerAdminController = async (req, res) => {
   try {
     let obj = {};
-    upload(req, res, async (err) => {
-      obj = {
-        profilePicture: res.req.file
-          ? `http://localhost:8000/${res.req.file.path}`
-          : "",
-        ...res.req.body,
-      };
-      const { error } = adminRegister.validate(obj);
-      if (error) {
-        return res.status(500).json(error.details[0].message);
-      }
-      const registerUser = await register(obj);
-      return res.send({
-        message: `User successfully created`,
-        data: registerUser,
-      });
+    let data = await getFormData(req, res);
+    obj = {
+      profilePicture: data.file
+        ? `http://localhost:8000/${data.file.path}`
+        : "",
+      ...data.body,
+    };
+    const { error } = adminRegisterValidation.validate(obj);
+    if (error) {
+      throw new Error(error.details[0].message);
+    }
+    const registerUser = await register(obj);
+    return res.send({
+      message: `User successfully created`,
+      data: registerUser,
     });
   } catch (error) {
     return res.status(500).json(error.message);
@@ -41,7 +43,7 @@ const loginController = async (req, res) => {
     const logged = await loginUser(req.body);
     return res.send({
       message: `User successfully logged In`,
-      data: logged,
+      token: logged,
     });
   } catch (error) {
     return res.status(500).json(error.message);
@@ -50,7 +52,7 @@ const loginController = async (req, res) => {
 
 const userListController = async (req, res) => {
   try {
-    const users = await userList();
+    const users = await userList(req.user);
     return res.send(users);
   } catch (error) {
     return res.status(500).json(error.message);
@@ -75,24 +77,18 @@ const changePasswordController = async (req, res) => {
 
 const updateUserController = async (req, res) => {
   try {
-    // const users = await userUpdate(req.user, req.body);
-    // return res.send(users);
     let obj = {};
-    upload(req, res, async (err) => {
-      obj = {
-        profilePicture: res.req.file
-          ? `http://localhost:8000/${res.req.file.path}`
-          : "",
-        ...res.req.body,
-      };
-      const { error } = userUpdateValidation.validate(obj);
-      if (error) {
-        return res.status(500).json(error.details[0].message);
-      }
-      await userUpdate(req.user, obj);
-      return res.send({
-        message: `User successfully updated`,
-      });
+    let data = await getFormData(req, res);
+    obj = {
+      ...data.body,
+    };
+    const { error } = userUpdateValidation.validate(obj);
+    if (error) {
+      return res.status(500).json(error.details[0].message);
+    }
+    await userUpdate(req.user, obj);
+    return res.send({
+      message: `User successfully updated`,
     });
   } catch (error) {
     return res.status(500).json(error.message);

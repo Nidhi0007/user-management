@@ -4,6 +4,20 @@ const { generateUnique } = require("../helper/passwordGenerator");
 const { sendMailFunction } = require("../helper/email");
 const checkAdmin = require("../middleware/adminAccess");
 const { User } = require("../models/userModel");
+const { upload } = require("./multerService");
+
+const getFormData = (req, res) => {
+  return new Promise((resolve, reject) => {
+    upload(req, res, (err) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(res.req);
+      }
+    });
+  });
+};
+
 const register = async (body) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -20,7 +34,7 @@ const register = async (body) => {
 
       const user = new User(data);
       await user.save();
-
+      delete user.password;
       resolve(user);
     } catch (error) {
       reject(error);
@@ -59,9 +73,10 @@ const loginUser = async (body) => {
     }
   });
 };
-const userList = async () => {
+const userList = async (user) => {
   return new Promise(async (resolve, reject) => {
     try {
+      await checkAdmin(user);
       const getUser = await User.find({
         isAdmin: false,
         enabled: true,
@@ -127,8 +142,13 @@ const passwordChange = async (body) => {
 const userUpdate = async (user, body) => {
   return new Promise(async (resolve, reject) => {
     try {
-      await User.updateOne(
-        { _id: user.id },
+      const userExists = await User.find({ _id: user.id });
+      if (!userExists.length) {
+        throw new Error("User not found");
+      }
+      console.log(body)
+      await User.findByIdAndUpdate(
+         user.id,
         {
           ...body,
         }
@@ -144,6 +164,10 @@ const disableUser = async (user, id) => {
   return new Promise(async (resolve, reject) => {
     try {
       await checkAdmin(user);
+      const userExists = await User.find({ _id: id });
+      if (!userExists.length) {
+        throw new Error("User not found");
+      }
       await User.findByIdAndUpdate(id, {
         enabled: false,
       });
@@ -158,6 +182,13 @@ const deleteUser = async (user, id) => {
   return new Promise(async (resolve, reject) => {
     try {
       await checkAdmin(user);
+      if (id === user.id) {
+        throw new Error("Logged in user can not be deleted");
+      }
+      const userExists = await User.find({ _id: id });
+      if (!userExists.length) {
+        throw new Error("User not found");
+      }
       await User.deleteOne({ id });
       resolve("User successfully deleted");
     } catch (error) {
@@ -166,6 +197,7 @@ const deleteUser = async (user, id) => {
   });
 };
 module.exports = {
+  getFormData,
   register,
   loginUser,
   userList,
