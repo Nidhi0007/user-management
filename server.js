@@ -13,7 +13,7 @@ const app = express();
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
 app.use("/", route);
-
+app.use('/uploads', express.static('uploads'));
 
 // mongodb connection
 mongoose.connect(url).then(()=>{

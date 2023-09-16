@@ -10,8 +10,8 @@ const auth = async (req, res, next) => {
       res.status(401).send("Please Authenticate");
     } else {
       const tokenArray = token.split(" ");
-      const decoded = jwt.verify(tokenArray[1], 'secret');
-
+      const decoded = jwt.verify(tokenArray[1], "secret");
+      req.user = decoded;
       if (!decoded) {
         res.status(401).send("Please Authenticate");
       }
